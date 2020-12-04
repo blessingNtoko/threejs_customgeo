@@ -32,9 +32,6 @@ export class AppComponent implements OnInit{
     this.controls.target.set(0, 0, 0);
     this.controls.update();
 
-    this.directLight.position.set(-1, 2, 4);
-    this.scene.add(this.directLight);
-
 
     this.geometry.vertices.push(
       new THREE.Vector3(-1, -1, 1), // 0
@@ -147,6 +144,14 @@ export class AppComponent implements OnInit{
 
     obj3D.position.x = x;
     return obj3D;
+  }
+
+  public addLight(...pos) {
+    const color = 'white';
+    const intensity = 1;
+    const light = new THREE.DirectionalLight(color, intensity);
+    light.position.set(pos[0], pos[1], pos[2]);
+    this.scene.add(light);
   }
 
   public createHeightMap(image) {
