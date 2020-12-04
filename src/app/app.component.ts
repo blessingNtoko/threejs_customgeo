@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as THREE from 'three';
 import * as dat from 'dat.gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { fstat } from 'fs';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,7 @@ export class AppComponent implements OnInit{
   });
   public camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, .1, 1000);
   public controls = new OrbitControls(this.camera, this.renderer.domElement);
-  public loader = new THREE.TextureLoader();
+  public textureLoader = new THREE.TextureLoader();
   public imgLoader = new THREE.ImageLoader();
 
   ngOnInit() {
@@ -34,7 +35,11 @@ export class AppComponent implements OnInit{
     this.addLight(-1, 2, 4);
     this.addLight(1, 2, -2);
 
-    this.imgLoader.load('../assets/textures/heightMap.png', this.createHeightMap);
+    const img = this.imgLoader.load('../assets/textures/oip.jpg');
+    // const img = this.imgLoader.load('https://threejsfundamentals.org/threejs/resources/images/heightmap-96x64.png');
+    console.log('source image ->', img);
+
+    this.createHeightMap(img);
 
     window.addEventListener('resize', () => {
       this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -80,6 +85,7 @@ export class AppComponent implements OnInit{
     // extract the data from the image by drawing it to a canvas and calling getImageData()
     const ctx = document.createElement('canvas').getContext('2d');
     const {width, height} = image;
+    console.log('width & height ->', width, height);
     ctx.canvas.width = width;
     ctx.canvas.height = height;
     ctx.drawImage(image, 0, 0);
@@ -151,7 +157,7 @@ export class AppComponent implements OnInit{
         // center the geometry
         geometry.translate(width / -2, 0, height / -2);
 
-        const texture = this.loader.load('../assets/textures/stars.jpg');
+        const texture = this.textureLoader.load('../assets/textures/stars.jpg');
 
         const material = new THREE.MeshPhongMaterial({
           color: 'green',
