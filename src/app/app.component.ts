@@ -39,7 +39,7 @@ export class AppComponent implements OnInit{
       new THREE.Vector3(1, -1, 1), // 1
       new THREE.Vector3(-1, 1, 1), // 2
       new THREE.Vector3(1, 1, 1), // 3
-      new THREE.Vector3(-1, -1, 1), // 4
+      new THREE.Vector3(-1, -1, -1), // 4
       new THREE.Vector3(1, -1, -1), // 5
       new THREE.Vector3(-1, 1, -1), // 6
       new THREE.Vector3(1, 1, -1), // 7
@@ -76,6 +76,9 @@ export class AppComponent implements OnInit{
       new THREE.Face3(4, 5, 1),
     );
 
+    // for lighting when using custom geometry
+    this.geometry.computeVertexNormals();
+
     const cubesArr = [
       this.makeInst(this.geometry, 0x44ff44, 0),
       this.makeInst(this.geometry, 0x4444ff, -4),
@@ -109,7 +112,7 @@ export class AppComponent implements OnInit{
   }
 
   public makeInst(geometry, color, x) {
-    const material = new THREE.MeshBasicMaterial({
+    const material = new THREE.MeshPhongMaterial({
       color
     });
 
