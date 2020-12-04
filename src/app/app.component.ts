@@ -18,6 +18,7 @@ export class AppComponent implements OnInit{
   public controls = new OrbitControls(this.camera, this.renderer.domElement);
   public geometry = new THREE.Geometry();
   public directLight = new THREE.DirectionalLight('white', 1);
+  public loader = new THREE.TextureLoader();
 
   ngOnInit() {
     this.init()
@@ -76,13 +77,36 @@ export class AppComponent implements OnInit{
       new THREE.Face3(4, 5, 1),
     );
 
+    this.geometry.faceVertexUvs[0].push(
+      // front
+      [new THREE.Vector2(0, 0), new THREE.Vector2(1, 1), new THREE.Vector2(0, 1)],
+      [new THREE.Vector2(0, 0), new THREE.Vector2(1, 0), new THREE.Vector2(1, 1)],
+      // right
+      [new THREE.Vector2(0, 0), new THREE.Vector2(1, 1), new THREE.Vector2(0, 1)],
+      [new THREE.Vector2(0, 0), new THREE.Vector2(1, 0), new THREE.Vector2(1, 1)],
+      // back
+      [new THREE.Vector2(0, 0), new THREE.Vector2(1, 1), new THREE.Vector2(0, 1)],
+      [new THREE.Vector2(0, 0), new THREE.Vector2(1, 0), new THREE.Vector2(1, 1)],
+      // left
+      [new THREE.Vector2(0, 0), new THREE.Vector2(1, 1), new THREE.Vector2(0, 1)],
+      [new THREE.Vector2(0, 0), new THREE.Vector2(1, 0), new THREE.Vector2(1, 1)],
+      // top
+      [new THREE.Vector2(0, 0), new THREE.Vector2(1, 1), new THREE.Vector2(0, 1)],
+      [new THREE.Vector2(0, 0), new THREE.Vector2(1, 0), new THREE.Vector2(1, 1)],
+      // bottom
+      [new THREE.Vector2(0, 0), new THREE.Vector2(1, 1), new THREE.Vector2(0, 1)],
+      [new THREE.Vector2(0, 0), new THREE.Vector2(1, 0), new THREE.Vector2(1, 1)],
+    );
+
     // for lighting when using custom geometry
-    this.geometry.computeVertexNormals();
+    this.geometry.computeFaceNormals();
+
+    const texture = this.loader.load('../assets/textures/stars.jpg');
 
     const cubesArr = [
-      this.makeInst(this.geometry, 0x44ff44, 0),
-      this.makeInst(this.geometry, 0x4444ff, -4),
-      this.makeInst(this.geometry, 0xff4444, 4)
+      this.makeInst(this.geometry, 0x44ff44, 0, texture),
+      this.makeInst(this.geometry, 0x4444ff, -4, texture),
+      this.makeInst(this.geometry, 0xff4444, 4, texture)
     ];
 
     window.addEventListener('resize', () => {
@@ -111,9 +135,10 @@ export class AppComponent implements OnInit{
 
   }
 
-  public makeInst(geometry, color, x) {
+  public makeInst(geometry, color, x, texture?) {
     const material = new THREE.MeshPhongMaterial({
-      color
+      color,
+      map: texture ? texture : null
     });
 
     const obj3D = new THREE.Mesh(geometry, material);
